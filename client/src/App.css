@@ -1,0 +1,34 @@
+.App-body {
+  margin: 10px;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 10s linear;
+  height: 8vmin;
+  pointer-events: none;
+  padding-right: 15px;
+  padding-left: 10px;
+  padding-bottom: 10px;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 12vmin;
+  display: flex;
+  align-items: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
