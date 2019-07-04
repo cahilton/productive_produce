@@ -11,7 +11,8 @@ Simple demo app for Georgia Tech Summer 2019, CS 6795 (Intro to Cognitive Scienc
 
 Runs on [http://localhost:3000](http://localhost:3000)
 
-See [Heroku Deployment](https://productive-produce-api.herokuapp.com/).
+See [Heroku Deployment](https://productive-produce-client.herokuapp.com/).
+
 
 
 ## Running Server
@@ -25,5 +26,4 @@ See [Heroku Deployment](https://productive-produce-api.herokuapp.com/).
 
 Runs on [http://localhost:5000](http://localhost:5000).
 
-See [Heroku Deployment](https://productive-produce-client.herokuapp.com/).
-
+See [Heroku Deployment](https://productive-produce-api.herokuapp.com/).
