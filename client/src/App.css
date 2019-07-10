@@ -37,3 +37,8 @@
 .content-body {
   padding-top: 20px;
 }
+
+.item-name {
+  margin-left: 10px;
+  font-size: 20pt;
+}
