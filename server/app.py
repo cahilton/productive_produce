@@ -92,6 +92,8 @@ def get_basic_info(item: str):
 def get_foodkeeper_data(item: str):
     lookup = item.lower().strip()
     global freshness_data
+    if len(freshness_data.keys()) == 0:
+        load_csvs()
     if lookup in freshness_data:
         return json.dumps(freshness_data[lookup], indent=4)
     lookup_2 = lookup + 's'
