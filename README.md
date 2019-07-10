@@ -13,10 +13,14 @@ Runs on [http://localhost:3000](http://localhost:3000)
 
 See [Heroku Deployment](https://productive-produce-client.herokuapp.com/).
 
+*NOTE:* Make sure to install new dependencies with `yarn`.
+
 
 
 ## Running Server
 `cd server`
+
+Copy `.env.example` to `.env` and fill out keys.
 
 `pip install -r requirements.txt`
 
