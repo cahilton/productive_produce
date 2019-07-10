@@ -3,3 +3,4 @@ requests>=2.20.0
 gunicorn==19.9.0
 python-dotenv
 cachetools
+flask_cors

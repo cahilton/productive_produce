@@ -1,13 +1,16 @@
-import os
 import csv
 import json
+import os
+
 import requests
+from cachetools import cached, TTLCache
 from dotenv import load_dotenv
 from flask import Flask, request
-from cachetools import cached, TTLCache
+from flask_cors import CORS
 
 load_dotenv()
 app = Flask(__name__)
+CORS(app)
 
 spoonacular_api_key = os.getenv('SPOONACULAR_API_KEY')
 walmart_api_key = os.getenv('WALMART_API_KEY')
