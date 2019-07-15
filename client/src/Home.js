@@ -62,12 +62,12 @@ export default class Home extends React.Component {
                                     Create Shopping List
                                 </button>
                             </div>
-                            <div className="column">
-                                <button className="button is-large is-info is-fullwidth"
-                                onClick={() => this.settingView('mealplan')}>
-                                    Create Meal Plan
-                                </button>
-                            </div>
+                            {/*<div className="column">*/}
+                            {/*    <button className="button is-large is-info is-fullwidth"*/}
+                            {/*    onClick={() => this.settingView('mealplan')}>*/}
+                            {/*        Create Meal Plan*/}
+                            {/*    </button>*/}
+                            {/*</div>*/}
                         </div>
                     </div>
                     :
