@@ -27,9 +27,10 @@ export default class ShoppingList extends React.Component {
             pantry: [],
             grocery: [],
             item_cache: {},
-            compost_modal: false,
             compost_data: {},
-            compost_modal_class: 'modal'
+            compost_modal_class: 'modal',
+            env_data: {},
+            env_modal_class: 'modal'
         };
         this.handleClick = this.handleClick.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -41,13 +42,13 @@ export default class ShoppingList extends React.Component {
         this.moveToGrocery = this.moveToGrocery.bind(this);
         this.mapItem = this.mapItem.bind(this);
         this.showCompostInfo = this.showCompostInfo.bind(this);
+        this.showEnvironmentalInfo = this.showEnvironmentalInfo.bind(this);
     }
 
     showCompostInfo(d, display) {
         if (display) {
             console.log('show modal');
             this.setState({
-                compost_modal: true,
                 compost_modal_class: 'modal is-active',
                 compost_data: {
                     title: "Compost " + d.name,
@@ -57,9 +58,27 @@ export default class ShoppingList extends React.Component {
             })
         } else {
             this.setState({
-                compost_modal: false,
                 compost_modal_class: 'modal',
                 compost_data: {}
+            })
+        }
+    }
+
+    showEnvironmentalInfo(d, display) {
+        if (display) {
+            console.log('show modal');
+            this.setState({
+                env_modal_class: 'modal is-active',
+                env_data: {
+                    title: "Environmental Impact of " + d.name,
+                    link: d['custom']['Environmental impact website'],
+                    content: d['custom']['Environmental impact']
+                }
+            })
+        } else {
+            this.setState({
+                env_modal_class: 'modal',
+                env_data: {}
             })
         }
     }
@@ -163,7 +182,7 @@ export default class ShoppingList extends React.Component {
 
 
     render() {
-        const {pantry, grocery, compost_modal_class, compost_data} = this.state;
+        const {pantry, grocery, compost_modal_class, compost_data, env_data, env_modal_class} = this.state;
 
         const pStyle = {
             width: '10px',
@@ -184,6 +203,44 @@ export default class ShoppingList extends React.Component {
 
         return (
             <div className="container">
+                <div className={env_modal_class}>
+                    <div className="modal-background"/>
+                    <div className="modal-card">
+                        <section className="modal-card-body">
+                            <div className="tile is-ancestor">
+                                <div className="tile is-vertical is-8">
+                                    <div className="tile is-parent">
+                                        <article className="tile is-child notification is-danger">
+                                            <p className="title">{env_data.title}</p>
+                                            <p className="subtitle"><a href={env_data.link} target="_blank">(Source)</a></p>
+                                            <div className="content">
+                                                {env_data.content}
+                                            </div>
+                                        </article>
+                                    </div>
+                                </div>
+                                <div className="tile is-parent">
+                                    <article className="tile is-child notification is-light">
+                                        <div className="content">
+                                            <p className="title">Links</p>
+                                            <div className="content">
+                                                <a href="https://www.bbc.com/news/science-environment-46459714" target="_blank">Your Food Carbon Footprint</a>
+                                            </div>
+                                            <div className="content">
+                                                <a href="https://www.sciencedirect.com/topics/food-science/environmental-impact-of-food" target="_blank">Learn about the Environmental Impact of Food</a>
+                                            </div>
+                                        </div>
+
+                                    </article>
+                                </div>
+                            </div>
+                        </section>
+                        <footer className="modal-card-foot">
+                            <button className="button" onClick={() => this.showEnvironmentalInfo({}, false)}>Close</button>
+                        </footer>
+                        <button className="modal-close is-large" onClick={() => this.showEnvironmentalInfo({}, false)} />
+                    </div>
+                </div>
                 <div className={compost_modal_class}>
                     <div className="modal-background"/>
                     <div className="modal-card">
@@ -264,6 +321,13 @@ export default class ShoppingList extends React.Component {
                                         className="fas fa-recycle has-text-success info-buttons"
                                     >&nbsp;</i></span>;
                                 }
+
+                                let environmental = <span/>;
+                                if (d.custom && d.custom['Environmental impact'] && d.custom['Environmental impact'].length > 0) {
+                                    environmental = <span onClick={() => this.showEnvironmentalInfo(d, true)}><i
+                                        className="fas fa-exclamation has-text-danger info-buttons"
+                                    >&nbsp;</i></span>;
+                                }
                                 return (
                                     <tr key={i} style={rowStyle}>
                                         <td>{i + 1}</td>
@@ -284,7 +348,7 @@ export default class ShoppingList extends React.Component {
 
                                         </td>
                                         <td>
-                                            {compost}
+                                            {compost}<span>&nbsp;</span>{environmental}
                                         </td>
                                         <td>
 
@@ -329,6 +393,12 @@ export default class ShoppingList extends React.Component {
                                         className="fas fa-recycle has-text-success info-buttons"
                                     >&nbsp;</i></span>;
                                 }
+                                let environmental = <span/>;
+                                if (d.custom && d.custom['Environmental impact'] && d.custom['Environmental impact'].length > 0) {
+                                    environmental = <span onClick={() => this.showEnvironmentalInfo(d, true)}><i
+                                        className="fas fa-exclamation has-text-danger info-buttons"
+                                    >&nbsp;</i></span>;
+                                }
                                 return (
                                     <tr key={i} style={rowStyle}>
                                         <td>{i + 1}</td>
@@ -349,7 +419,7 @@ export default class ShoppingList extends React.Component {
 
                                         </td>
                                         <td>
-                                            {compost}
+                                            {compost}<span>&nbsp;</span>{environmental}
                                         </td>
                                         <td>
                                             <button className="row-button  button is-pulled-right tooltip"
