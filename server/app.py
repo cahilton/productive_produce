@@ -198,6 +198,9 @@ def get_recipe(items: str):
         data = response.json()
         data['image'] = r['image']
         data['title'] = r['title']
+        data['missed'] = list()
+        for m in r['missedIngredients']:
+            data['missed'].append(m['name'])
         found.append(data)
     return json.dumps(found, indent=4)
 
