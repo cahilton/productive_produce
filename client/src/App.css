@@ -64,13 +64,17 @@
 }
 
 .food-icon {
-  max-width: 42px;
+  max-width: 60px;
   text-align: center;
-  max-height: 42px;
+  max-height: 60px;
 }
 
 .info-buttons {
   cursor: pointer;
     margin: 3px;
     font-size: 16pt;
+}
+
+.recipeName {
+    font-size: large;
 }

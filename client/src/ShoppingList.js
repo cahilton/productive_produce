@@ -32,7 +32,8 @@ export default class ShoppingList extends React.Component {
             env_data: {},
             env_modal_class: 'modal',
             info_data: {},
-            info_modal_class: 'modal'
+            info_modal_class: 'modal',
+            recipes: []
         }
         ;
         this.handleClick = this.handleClick.bind(this);
@@ -47,8 +48,45 @@ export default class ShoppingList extends React.Component {
         this.showCompostInfo = this.showCompostInfo.bind(this);
         this.showEnvironmentalInfo = this.showEnvironmentalInfo.bind(this);
         this.showInfo = this.showInfo.bind(this);
+        this.getRecipes = this.getRecipes.bind(this);
+        this.quickAdd = this.quickAdd.bind(this);
     }
 
+    quickAdd(item) {
+       axios.get(this.api_url + '/info/' + item)
+                .then(res => {
+                    const data = this.mapItem(res, item);
+                    this.setState({
+                        grocery: this.state.grocery.concat(data)
+                    }, () => {this.getRecipes()})
+                });
+    }
+
+    getRecipes() {
+        let ingredients = '';
+        for (let i in this.state.grocery) {
+            if (ingredients.length > 0) {
+                ingredients += ','
+            }
+            ingredients += this.state.grocery[i]['name'];
+        }
+        for (let i in this.state.pantry) {
+            if (ingredients.length > 0) {
+                ingredients += ','
+            }
+            ingredients += this.state.pantry[i]['name'];
+        }
+        if (ingredients.length > 0) {
+            axios.get(this.api_url + '/recipe/' + ingredients)
+                .then(res => {
+                    console.log(res.data);
+
+                    this.setState({
+                        recipes: res.data
+                    })
+                });
+        }
+    }
 
     showInfo(d, display){
         if (display) {
@@ -148,7 +186,7 @@ export default class ShoppingList extends React.Component {
                     this.setState({
                         grocery: this.state.grocery.concat(data),
                         value: ''
-                    })
+                    }, () => {this.getRecipes()})
                 });
         }
         event.preventDefault();
@@ -163,7 +201,7 @@ export default class ShoppingList extends React.Component {
                     const data = this.mapItem(res, shopItems[i]);
                     this.setState({
                         grocery: this.state.grocery.concat(data)
-                    })
+                    }, () => {if (i === "1") { this.getRecipes()}})
                 });
         }
 
@@ -206,10 +244,10 @@ export default class ShoppingList extends React.Component {
 
 
     render() {
-        const {pantry, grocery, compost_modal_class, compost_data, env_data, env_modal_class, info_modal_class, info_data} = this.state;
+        const {pantry, grocery, compost_modal_class, compost_data, env_data, env_modal_class, info_modal_class, info_data, recipes} = this.state;
 
         const pStyle = {
-            width: '10px',
+            width: '20px',
             marginLeft: '5px',
             textAlign: 'center'
         };
@@ -223,6 +261,12 @@ export default class ShoppingList extends React.Component {
         const rowStyle = {
             padding: '2em 1em',
             margin: '2em'
+        };
+
+        const rStyle = {
+            width: '30px',
+            marginLeft: '5px',
+            textAlign: 'center'
         };
 
         return (
@@ -475,12 +519,12 @@ export default class ShoppingList extends React.Component {
                                         <td>{i + 1}</td>
                                         <td>
                                             <div>
-                                                <figure>
-                                                    <p className="image is-64x64">
+                                                <span>
+                                                    <span className="image is-64x64">
                                                         <img className="food-icon"
                                                              src={`https://spoonacular.com/cdn/ingredients_100x100/${d.image}`}/>
-                                                    </p>
-                                                </figure>
+                                                    </span>
+                                                </span>
 
                                             </div>
                                         </td>
@@ -511,6 +555,53 @@ export default class ShoppingList extends React.Component {
                         }
                         </tbody>
                     </table>
+                </div>
+                <div>
+                    <h1 className="h3 list-header ">Recipes</h1>
+                    <table className="table is-fullwidth is-hoverable">
+                        <thead>
+                        <tr>
+                            <th style={rStyle}></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {
+                            recipes.map((d, i) => {
+                                return (
+                                    <tr key={i}>
+                                        <td>
+                                            <figure>
+                                                        <p className="image is-64x64">
+                                                            <img className="food-icon"
+                                                                 src={d.image}/>
+                                                        </p>
+                                                    </figure>
+                                        </td>
+                                        <td className="recipeName">
+                                            <a target="_blank" href={d.sourceUrl}>{d.title}</a>
+                                        </td>
+                                        <td>
+                                            Missing: <div>
+                                            {
+
+                                                d['missed'].map((m, j) => {
+                                                    return (
+                                                        <span key={j}><a onClick={() => this.quickAdd(m)}>{m}</a><br/></span>
+                                                    )
+                                                })
+                                            }
+                                            </div>
+                                        </td>
+                                    </tr>
+                                );
+                            })
+                        }
+                        </tbody>
+                    </table>
+
+
                 </div>
 
             </div>
