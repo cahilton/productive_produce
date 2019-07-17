@@ -94,7 +94,7 @@ export default class ShoppingList extends React.Component {
             this.setState({
                 info_modal_class: 'modal is-active',
                 info_data: {
-                    title: "When purchasing " + d.name + ": ",
+                    title: "More about " + d.name + ": ",
                     purchasing: d['custom']['Purchasing'],
                     cooking: d['custom']['Tips']
                 }

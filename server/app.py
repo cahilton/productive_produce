@@ -27,6 +27,12 @@ custom_data = dict()
 nutrition = dict()
 food_db = dict()
 
+modifiers = ['red', 'yellow', 'green', 'orange', 'blue', 'purple', 'white', 'black', 'cooked', 'raw', 'stuffed',
+             'baked', 'blanched', 'hard boiled', 'boiled', 'boneless', 'bone in', 'bone-in',
+             'whole', 'small', 'large', 'medium', 'baby', 'fresh', 'ground', 'sliced', 'chopped', 'cut']
+replacer_words = ['cooked', 'raw', 'stuffed', 'baked', 'blanched', 'hard boiled', 'boiled', 'boneless', 'bone in', 'bone-in',
+                  'whole', 'small', 'large', 'medium', 'baby', 'fresh', 'ground', 'sliced', 'chopped', 'cut']
+
 
 def load_csvs():
     print('loadup csvs')
@@ -57,19 +63,36 @@ def load_csvs():
             data['cooking_tips'] = cooking_tips[r['id']]
         else:
             data['cooking_tips'] = dict()
-        freshness_data[name] = data
+
         subtitle = r['Name_subtitle'].lower().strip()
+        names = [name]
+
         if len(subtitle) > 0:
             alt_name_1 = subtitle + ' ' + name
             alt_name_2 = name + ' ' + subtitle
-            freshness_data[alt_name_1] = freshness_data[name]
-            freshness_data[alt_name_2] = freshness_data[name]
-        if name[-1] == 's':
-            sing_name = name[0:-1]
-            freshness_data[sing_name] = freshness_data[name]
-        else:
-            plural_name = name + 's'
-            freshness_data[plural_name] = freshness_data[name]
+            names.append(alt_name_1)
+            names.append(alt_name_2)
+        s = name.split(',')
+        if len(s) > 1:
+            for _s in s:
+                if _s not in modifiers:
+                    names.append(_s)
+        names = list(set(names))
+        for n in names:
+            freshness_data[n] = data
+            if n[-1] == 's':
+                sing_name = n[0:-1]
+                freshness_data[sing_name] = data
+            else:
+                plural_name = n + 's'
+                freshness_data[plural_name] = data
+            for w in replacer_words:
+                replaced = n.replace(w, '').strip().replace('  ', ' ')
+                if replaced not in freshness_data:
+                    freshness_data[replaced] = data
+
+
+
 
     global custom_data
     rows = csv.DictReader(open("./data/custom_info.csv"))
