@@ -55,14 +55,20 @@
 
 .aisle {
   color: gray;
+  margin-left: 4px;
 }
 
 .row-button {
   margin-left: 10px;
+  margin-top: 2px;
 }
 
 .food-icon {
   max-width: 32px;
   text-align: center;
   max-height: 32px;
+}
+
+.info-buttons {
+  cursor: pointer;
 }
