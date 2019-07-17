@@ -30,8 +30,11 @@ export default class ShoppingList extends React.Component {
             compost_data: {},
             compost_modal_class: 'modal',
             env_data: {},
-            env_modal_class: 'modal'
-        };
+            env_modal_class: 'modal',
+            info_data: {},
+            info_modal_class: 'modal'
+        }
+        ;
         this.handleClick = this.handleClick.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -43,9 +46,30 @@ export default class ShoppingList extends React.Component {
         this.mapItem = this.mapItem.bind(this);
         this.showCompostInfo = this.showCompostInfo.bind(this);
         this.showEnvironmentalInfo = this.showEnvironmentalInfo.bind(this);
+        this.showInfo = this.showInfo.bind(this);
     }
 
-    showCompostInfo(d, display) {
+
+    showInfo(d, display){
+        if (display) {
+            console.log('show modal');
+            this.setState({
+                info_modal_class: 'modal is-active',
+                info_data: {
+                    title: "When purchasing " + d.name + ": ",
+                    purchasing: d['custom']['Purchasing'],
+                    cooking: d['custom']['Tips']
+                }
+            })
+        } else {
+            this.setState({
+                info_modal_class: 'modal',
+                info_data: {}
+            })
+        }
+    }
+
+    showCompostInfo(d, display){
         if (display) {
             console.log('show modal');
             this.setState({
@@ -70,7 +94,7 @@ export default class ShoppingList extends React.Component {
             this.setState({
                 env_modal_class: 'modal is-active',
                 env_data: {
-                    title: "Environmental Impact of " + d.name,
+                    title: "Known Impact of " + d.name,
                     link: d['custom']['Environmental impact website'],
                     content: d['custom']['Environmental impact']
                 }
@@ -182,7 +206,7 @@ export default class ShoppingList extends React.Component {
 
 
     render() {
-        const {pantry, grocery, compost_modal_class, compost_data, env_data, env_modal_class} = this.state;
+        const {pantry, grocery, compost_modal_class, compost_data, env_data, env_modal_class, info_modal_class, info_data} = this.state;
 
         const pStyle = {
             width: '10px',
@@ -191,7 +215,7 @@ export default class ShoppingList extends React.Component {
         };
 
         const iStyle = {
-            width: '32px',
+            width: '64px',
             marginLeft: '5px',
             textAlign: 'center'
         };
@@ -203,6 +227,40 @@ export default class ShoppingList extends React.Component {
 
         return (
             <div className="container">
+               <div className={info_modal_class}>
+                    <div className="modal-background"/>
+                    <div className="modal-card">
+                        <section className="modal-card-body">
+                            <div className="tile is-ancestor">
+                                <div className="tile is-vertical is-8">
+                                    <div className="tile is-parent">
+                                        <article className="tile is-child notification is-primary">
+                                            <p className="subtitle">{info_data.title}</p>
+                                            <div className="content">
+                                                {info_data.purchasing}
+                                            </div>
+                                        </article>
+                                    </div>
+                                </div>
+                                <div className="tile is-parent">
+                                    <article className="tile is-child notification is-light">
+                                        <div className="content">
+                                            <p className="subtitle">Cooking Tips</p>
+                                            <div className="content">
+                                                {info_data.cooking}
+                                            </div>
+                                        </div>
+
+                                    </article>
+                                </div>
+                            </div>
+                        </section>
+                        <footer className="modal-card-foot">
+                            <button className="button" onClick={() => this.showInfo({}, false)}>Close</button>
+                        </footer>
+                        <button className="modal-close is-large" onClick={() => this.showInfo({}, false)} />
+                    </div>
+                </div>
                 <div className={env_modal_class}>
                     <div className="modal-background"/>
                     <div className="modal-card">
@@ -222,7 +280,7 @@ export default class ShoppingList extends React.Component {
                                 <div className="tile is-parent">
                                     <article className="tile is-child notification is-light">
                                         <div className="content">
-                                            <p className="title">Links</p>
+                                            <p className="subtitle">Links</p>
                                             <div className="content">
                                                 <a href="https://www.bbc.com/news/science-environment-46459714" target="_blank">Your Food Carbon Footprint</a>
                                             </div>
@@ -248,7 +306,7 @@ export default class ShoppingList extends React.Component {
                             <div className="tile is-ancestor">
                                 <div className="tile is-vertical is-8">
                                     <div className="tile is-parent">
-                                        <article className="tile is-child notification is-primary">
+                                        <article className="tile is-child notification is-success">
                                             <p className="title">{compost_data.title}</p>
                                             <p className="subtitle"><a href={compost_data.link} target="_blank">(Source)</a></p>
                                             <div className="content">
@@ -260,7 +318,7 @@ export default class ShoppingList extends React.Component {
                                 <div className="tile is-parent">
                                     <article className="tile is-child notification is-light">
                                         <div className="content">
-                                            <p className="title">Links</p>
+                                            <p className="subtitle">Links</p>
                                             <div className="content">
                                                 <a href="http://www.findacomposter.com/" target="_blank">Find a Composter Near You</a>
                                             </div>
@@ -328,13 +386,20 @@ export default class ShoppingList extends React.Component {
                                         className="fas fa-exclamation has-text-danger info-buttons"
                                     >&nbsp;</i></span>;
                                 }
+
+                                let info = <span/>;
+                                if (d.custom && d.custom['Purchasing'] && d.custom['Purchasing'].length > 0) {
+                                    info = <span onClick={() => this.showInfo(d, true)}><i
+                                        className="fas fa-info-circle has-text-primary info-buttons"
+                                    >&nbsp;</i></span>;
+                                }
                                 return (
                                     <tr key={i} style={rowStyle}>
                                         <td>{i + 1}</td>
                                         <td>
                                             <div>
                                                 <figure>
-                                                    <p className="image is-32x32">
+                                                    <p className="image is-64x64">
                                                         <img className="food-icon"
                                                              src={`https://spoonacular.com/cdn/ingredients_100x100/${d.image}`}/>
                                                     </p>
@@ -348,7 +413,7 @@ export default class ShoppingList extends React.Component {
 
                                         </td>
                                         <td>
-                                            {compost}<span>&nbsp;</span>{environmental}
+                                            {info}<span>&nbsp;</span>{compost}<span>&nbsp;</span>{environmental}
                                         </td>
                                         <td>
 
@@ -399,13 +464,19 @@ export default class ShoppingList extends React.Component {
                                         className="fas fa-exclamation has-text-danger info-buttons"
                                     >&nbsp;</i></span>;
                                 }
+                                let info = <span/>;
+                                if (d.custom && d.custom['Purchasing'] && d.custom['Purchasing'].length > 0) {
+                                    info = <span onClick={() => this.showInfo(d, true)}><i
+                                        className="fas fa-info-circle has-text-primary info-buttons"
+                                    >&nbsp;</i></span>;
+                                }
                                 return (
                                     <tr key={i} style={rowStyle}>
                                         <td>{i + 1}</td>
                                         <td>
                                             <div>
                                                 <figure>
-                                                    <p className="image is-32x32">
+                                                    <p className="image is-64x64">
                                                         <img className="food-icon"
                                                              src={`https://spoonacular.com/cdn/ingredients_100x100/${d.image}`}/>
                                                     </p>
@@ -419,7 +490,7 @@ export default class ShoppingList extends React.Component {
 
                                         </td>
                                         <td>
-                                            {compost}<span>&nbsp;</span>{environmental}
+                                            {info}<span>&nbsp;</span>{compost}<span>&nbsp;</span>{environmental}
                                         </td>
                                         <td>
                                             <button className="row-button  button is-pulled-right tooltip"

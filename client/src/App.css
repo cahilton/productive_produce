@@ -64,11 +64,13 @@
 }
 
 .food-icon {
-  max-width: 32px;
+  max-width: 42px;
   text-align: center;
-  max-height: 32px;
+  max-height: 42px;
 }
 
 .info-buttons {
   cursor: pointer;
+    margin: 3px;
+    font-size: 16pt;
 }
