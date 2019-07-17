@@ -410,6 +410,7 @@ export default class ShoppingList extends React.Component {
                             <th style={iStyle}>Item</th>
                             <th></th>
                             <th></th>
+                            <th>Storage</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -437,6 +438,40 @@ export default class ShoppingList extends React.Component {
                                         className="fas fa-info-circle has-text-primary info-buttons"
                                     >&nbsp;</i></span>;
                                 }
+
+                                let elem1 = <span/>;
+                                let elem2 = <span/>;
+                                let elem3 = <span/>;
+                                if (d.custom && d.custom['Pantry'] && d.custom['Pantry'].length > 0) {
+                                    let storage_info = d.custom['Pantry'];
+                                    let storage_icon = <i
+                                        className="fas fa-apple-alt has-text-primary	 "
+                                    >&nbsp;</i>;
+                                    elem1 = <div>
+                                        {storage_icon} {storage_info}
+                                    </div>
+                                }
+                                if (d.custom && d.custom['Refrigerator'] && d.custom['Refrigerator'].length > 0) {
+                                    let storage_info = d.custom['Refrigerator'];
+                                    let storage_icon = <i
+                                        className="fas fa-fish has-text-info"
+                                    >&nbsp;</i>;
+                                    elem2 = <div>
+                                        {storage_icon} {storage_info}
+                                    </div>
+                                }
+                                if (d.custom && d.custom['Frozen'] && d.custom['Frozen'].length > 0) {
+                                    let storage_info = d.custom['Frozen'];
+                                    let storage_icon = <i
+                                        className="fas fa-snowflake has-text-link	"
+                                    >&nbsp;</i>;
+                                    elem3 = <div>
+                                        {storage_icon} {storage_info}
+                                    </div>
+                                }
+                                let storage_elem = <div>
+                                    {elem1} {elem2} {elem3}
+                                </div>;
                                 return (
                                     <tr key={i} style={rowStyle}>
                                         <td>{i + 1}</td>
@@ -453,11 +488,15 @@ export default class ShoppingList extends React.Component {
                                         </td>
                                         <td>
                                             {d.name}
+                                            <br/>
                                             <small className="aisle">{d['aisle']}</small>
 
                                         </td>
                                         <td>
                                             {info}<span>&nbsp;</span>{compost}<span>&nbsp;</span>{environmental}
+                                        </td>
+                                        <td>
+                                            {storage_elem}
                                         </td>
                                         <td>
 
@@ -489,6 +528,7 @@ export default class ShoppingList extends React.Component {
                             <th style={iStyle}>Item</th>
                             <th></th>
                             <th></th>
+                            <th>Storage</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -514,6 +554,39 @@ export default class ShoppingList extends React.Component {
                                         className="fas fa-info-circle has-text-primary info-buttons"
                                     >&nbsp;</i></span>;
                                 }
+                                let elem1 = <span/>;
+                                let elem2 = <span/>;
+                                let elem3 = <span/>;
+                                if (d.custom && d.custom['Pantry'] && d.custom['Pantry'].length > 0) {
+                                    let storage_info = d.custom['Pantry'];
+                                    let storage_icon = <i
+                                        className="fas fa-apple-alt has-text-primary	 "
+                                    >&nbsp;</i>;
+                                    elem1 = <div>
+                                        {storage_icon} {storage_info}
+                                    </div>
+                                }
+                                if (d.custom && d.custom['Refrigerator'] && d.custom['Refrigerator'].length > 0) {
+                                    let storage_info = d.custom['Refrigerator'];
+                                    let storage_icon = <i
+                                        className="fas fa-fish has-text-info"
+                                    >&nbsp;</i>;
+                                    elem2 = <div>
+                                        {storage_icon} {storage_info}
+                                    </div>
+                                }
+                                if (d.custom && d.custom['Frozen'] && d.custom['Frozen'].length > 0) {
+                                    let storage_info = d.custom['Frozen'];
+                                    let storage_icon = <i
+                                        className="fas fa-snowflake has-text-link	"
+                                    >&nbsp;</i>;
+                                    elem3 = <div>
+                                        {storage_icon} {storage_info}
+                                    </div>
+                                }
+                                let storage_elem = <div>
+                                    {elem1} {elem2} {elem3}
+                                </div>;
                                 return (
                                     <tr key={i} style={rowStyle}>
                                         <td>{i + 1}</td>
@@ -530,11 +603,15 @@ export default class ShoppingList extends React.Component {
                                         </td>
                                         <td>
                                             {d.name}
+                                            <br/>
                                             <small className="aisle">{d['aisle']}</small>
 
                                         </td>
                                         <td>
                                             {info}<span>&nbsp;</span>{compost}<span>&nbsp;</span>{environmental}
+                                        </td>
+                                        <td>
+                                            {storage_elem}
                                         </td>
                                         <td>
                                             <button className="row-button  button is-pulled-right tooltip"
