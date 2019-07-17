@@ -22,6 +22,8 @@ spoonacular_headers = {
 
 cache = TTLCache(maxsize=1000, ttl=3600)
 freshness_data = dict()
+custom_data = dict()
+nutrition = dict()
 
 
 def load_csvs():
@@ -63,6 +65,76 @@ def load_csvs():
         if name[-1] == 's':
             sing_name = name[0:-1]
             freshness_data[sing_name] = freshness_data[name]
+        else:
+            plural_name = name + 's'
+            freshness_data[plural_name] = freshness_data[name]
+
+    global custom_data
+    rows = csv.DictReader(open("./data/custom_info.csv"))
+    for r in rows:
+        name = r['Name'].lower()
+        if len(name) == 0:
+            continue
+        custom_data[name] = r
+        if name == 'baby carrots':
+            custom_data['carrots'] = r
+            custom_data['carrot'] = r
+        if name == 'bagged greens':
+            custom_data['greens'] = r
+            custom_data['bagged salad'] = r
+            custom_data['salad mix'] = r
+            custom_data['salad greens'] = r
+        if name[-1] == 's':
+            sing_name = name[0:-1]
+            custom_data[sing_name] = custom_data[name]
+        else:
+            plural_name = name + 's'
+            custom_data[plural_name] = custom_data[name]
+
+    global nutrition
+    rows = csv.DictReader(open("./data/NutritionalFacts.csv"))
+    for r in rows:
+        name = r['Food and Serving'].lower().split(',')[0]
+        if len(name) == 0:
+            continue
+        nutrition[name] = r
+        if name[-1] == 's':
+            sing_name = name[0:-1]
+            nutrition[sing_name] = nutrition[name]
+        else:
+            plural_name = name + 's'
+            nutrition[plural_name] = nutrition[name]
+
+
+def _lookup(item: str, _dict):
+    lookup = item.lower().strip()
+    if len(_dict.keys()) == 0:
+        load_csvs()
+    if lookup in _dict:
+        return _dict[lookup]
+    lookup_2 = lookup + 's'
+    if lookup_2 in _dict:
+        return _dict[lookup_2]
+    lookup_split = lookup.split(' ')
+    for lookup_3 in lookup_split:
+        if lookup_3 in _dict:
+            return _dict[lookup_3]
+    return {}
+
+
+def _foodkeeper_data(item: str):
+    global freshness_data
+    return _lookup(item, freshness_data)
+
+
+def _custom_data(item: str):
+    global custom_data
+    return _lookup(item, custom_data)
+
+
+def _nutrition_data(item: str):
+    global nutrition
+    return _lookup(item, nutrition)
 
 
 @app.route("/", methods=['POST', 'GET'])
@@ -88,25 +160,24 @@ def get_basic_info(item: str):
             "ingredientList": item,
             "servings": 1
         })
-    return response.text
+
+    res = response.json()
+
+    if len(res) > 0:
+        data = res[0]
+        item = data['name']
+    else:
+        data = dict()
+        data['name'] = item
+    data['foodkeeper'] = _foodkeeper_data(item)
+    data['custom'] = _custom_data(item)
+    data['raw_nutrition'] =_nutrition_data(item)
+    return json.dumps([data], indent=4)
 
 
 @app.route("/foodkeeper/<string:item>", methods=['GET'])
 def get_foodkeeper_data(item: str):
-    lookup = item.lower().strip()
-    global freshness_data
-    if len(freshness_data.keys()) == 0:
-        load_csvs()
-    if lookup in freshness_data:
-        return json.dumps(freshness_data[lookup], indent=4)
-    lookup_2 = lookup + 's'
-    if lookup_2 in freshness_data:
-        return json.dumps(freshness_data[lookup_2], indent=4)
-    lookup_split = lookup.split(' ')
-    for lookup_3 in lookup_split:
-        if lookup_3 in freshness_data:
-            return json.dumps(freshness_data[lookup_3], indent=4)
-    return "{}"
+    return json.dumps(_foodkeeper_data(item), indent=4)
 
 
 if __name__ == '__main__':
