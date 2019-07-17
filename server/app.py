@@ -21,6 +21,7 @@ spoonacular_headers = {
 }
 
 cache = TTLCache(maxsize=1000, ttl=3600)
+recipe_cache  = TTLCache(maxsize=1000, ttl=3600)
 freshness_data = dict()
 custom_data = dict()
 nutrition = dict()
@@ -179,6 +180,26 @@ def get_basic_info(item: str):
     data['custom'] = _custom_data(item)
     data['raw_nutrition'] =_nutrition_data(item)
     return json.dumps([data], indent=4)
+
+
+@app.route("/recipe/<string:items>", methods=['GET'])
+@cached(recipe_cache)
+def get_recipe(items: str):
+    response = requests.get(
+        'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/findByIngredients?number=5&ranking=1&ignorePantry=false&ingredients={}'.format(items),
+        headers=spoonacular_headers,
+    )
+
+    res = response.json()
+    found = list()
+    for r in res:
+        response = requests.get("https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/{}/information".format(r['id']),
+                                headers=spoonacular_headers,)
+        data = response.json()
+        data['image'] = r['image']
+        data['title'] = r['title']
+        found.append(data)
+    return json.dumps(found, indent=4)
 
 
 @app.route("/foodkeeper/<string:item>", methods=['GET'])
