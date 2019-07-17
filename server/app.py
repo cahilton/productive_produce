@@ -42,12 +42,10 @@ def load_csvs():
     cooking_tips = dict()
     food_keeper_rows = csv.DictReader(open("./data/foodkeeper_cooking_methods.csv"))
     for r in food_keeper_rows:
-        r['id'] = r['\ufeffID']
-        cooking_methods[r['id']] = r
+        cooking_methods[r['Product_ID']] = r
     food_keeper_rows = csv.DictReader(open("./data/foodkeeper_cooking_tips.csv"))
     for r in food_keeper_rows:
-        r['id'] = r['\ufeffID']
-        cooking_tips[r['id']] = r
+        cooking_tips[r['Product_ID']] = r
 
     food_keeper_rows = csv.DictReader(open("./data/foodkeeper_product.csv"))
     for r in food_keeper_rows:
@@ -80,13 +78,16 @@ def load_csvs():
                     names.append(_s)
         names = list(set(names))
         for n in names:
-            freshness_data[n] = data
+            if n not in freshness_data:
+                freshness_data[n] = data
             if n[-1] == 's':
                 sing_name = n[0:-1]
-                freshness_data[sing_name] = data
+                if sing_name not in freshness_data:
+                    freshness_data[sing_name] = data
             else:
                 plural_name = n + 's'
-                freshness_data[plural_name] = data
+                if plural_name not in freshness_data:
+                    freshness_data[plural_name] = data
 
             for w in replacer_words:
                 replaced = n.replace(w, '').strip().replace('  ', ' ')
@@ -116,13 +117,16 @@ def load_csvs():
 
         names = [name]
         for n in names:
-            custom_data[n] = r
+            if n not in custom_data:
+                custom_data[n] = r
             if n[-1] == 's':
                 sing_name = n[0:-1]
-                custom_data[sing_name] = r
+                if sing_name not in custom_data:
+                    custom_data[sing_name] = r
             else:
                 plural_name = n + 's'
-                custom_data[plural_name] = r
+                if plural_name not in custom_data:
+                    custom_data[plural_name] = r
             for w in replacer_words:
                 replaced = n.replace(w, '').strip().replace('  ', ' ')
                 if replaced not in custom_data:
@@ -136,13 +140,16 @@ def load_csvs():
             continue
         names = [name]
         for n in names:
-            nutrition[n] = r
+            if n not in nutrition:
+                nutrition[n] = r
             if n[-1] == 's':
                 sing_name = n[0:-1]
-                nutrition[sing_name] = r
+                if sing_name not in nutrition:
+                    nutrition[sing_name] = r
             else:
                 plural_name = n + 's'
-                nutrition[plural_name] = r
+                if plural_name not in nutrition:
+                    nutrition[plural_name] = r
             for w in replacer_words:
                 replaced = n.replace(w, '').strip().replace('  ', ' ')
                 if replaced not in nutrition:
