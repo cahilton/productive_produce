@@ -84,6 +84,8 @@ def load_csvs():
             custom_data['bagged salad'] = r
             custom_data['salad mix'] = r
             custom_data['salad greens'] = r
+        if name == 'bagged lettuce':
+            custom_data['lettuce'] = r
         if name == 'blueberries':
             custom_data['blueberry'] = r
         if name == 'tomatoes':
