@@ -281,7 +281,14 @@ def get_basic_info(item: str):
                 min_v = data['foodkeeper']['DOP_{}_Min'.format(t)]
                 max_v = data['foodkeeper']['DOP_{}_Max'.format(t)]
                 metric_v = data['foodkeeper']['DOP_{}_Metric'.format(t)]
-                tips_v = data['foodkeeper']['DOP_{}_tips'.format(t)]
+                if t == 'Refrigerate':
+                    tips_v = data['foodkeeper']['DOP_Refrigerate_tips']
+                elif t == 'Freeze':
+                    tips_v = data['foodkeeper']['DOP_Freeze_Tips']
+                elif t == 'Pantry':
+                    tips_v = data['foodkeeper']['DOP_Pantry_tips']
+                else:
+                    tips_v = ''
 
                 if len(min_v) > 0 or len(tips_v) > 0:
                     v_str = ''
