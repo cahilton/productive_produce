@@ -247,13 +247,13 @@ export default class ShoppingList extends React.Component {
         const {pantry, grocery, compost_modal_class, compost_data, env_data, env_modal_class, info_modal_class, info_data, recipes} = this.state;
 
         const pStyle = {
-            width: '20px',
+            width: '10px',
             marginLeft: '5px',
             textAlign: 'center'
         };
 
         const iStyle = {
-            width: '64px',
+            width: '60px',
             marginLeft: '5px',
             textAlign: 'center'
         };
@@ -264,7 +264,7 @@ export default class ShoppingList extends React.Component {
         };
 
         const rStyle = {
-            width: '30px',
+            width: '20px',
             marginLeft: '5px',
             textAlign: 'center'
         };
