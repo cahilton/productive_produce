@@ -25,6 +25,7 @@ recipe_cache  = TTLCache(maxsize=1000, ttl=3600)
 freshness_data = dict()
 custom_data = dict()
 nutrition = dict()
+food_db = dict()
 
 
 def load_csvs():
@@ -112,6 +113,20 @@ def load_csvs():
             plural_name = name + 's'
             nutrition[plural_name] = nutrition[name]
 
+    global food_db
+    rows = csv.DictReader(open("./data/food_db.csv"))
+    for r in rows:
+        name = r['name'].lower().split(',')[0]
+        if len(name) == 0:
+            continue
+        food_db[name] = r
+        if name[-1] == 's':
+            sing_name = name[0:-1]
+            food_db[sing_name] = food_db[name]
+        else:
+            plural_name = name + 's'
+            food_db[plural_name] = food_db[name]
+
 
 def _lookup(item: str, _dict):
     lookup = item.lower().strip()
@@ -142,6 +157,11 @@ def _custom_data(item: str):
 def _nutrition_data(item: str):
     global nutrition
     return _lookup(item, nutrition)
+
+
+def _fooddb_data(item: str):
+    global food_db
+    return _lookup(item, food_db)
 
 
 @app.route("/", methods=['POST', 'GET'])
@@ -178,6 +198,32 @@ def get_basic_info(item: str):
         data['name'] = item
     data['foodkeeper'] = _foodkeeper_data(item)
     data['custom'] = _custom_data(item)
+    data['wiki'] = _fooddb_data(item)
+    if len(data['custom'].keys()) == 0:
+        data['custom']['Purchasing'] = ''
+        data['custom']['Tips'] = ''
+        if len(data['wiki'].keys()) > 0:
+            desc = data['wiki']['description']
+            data['custom']['Purchasing'] = desc
+        if len(data['foodkeeper'].keys()) > 0:
+            cook_data = data['foodkeeper']['cooking_methods']
+            tip_data = data['foodkeeper']['cooking_tips']
+            cook_tip = ''
+
+            if len(tip_data.keys()) > 0:
+                tip_str = tip_data['Tips']
+                if len(tip_str) > 0:
+                    cook_tip = tip_str
+
+            if len(cook_data.keys()) > 0:
+                if len(cook_tip) > 0:
+                    cook_tip += '\n\n'
+                cook_tip += '{}'.format(cook_data['Cooking_Method'])
+                if len(cook_data['Timing_from']) > 0:
+                    timing = ' for {} to {} {}'.format(cook_data['Timing_from'], cook_data['Timing_to'], cook_data['Timing_metric'])
+                    cook_tip += timing
+            data['custom']['Tips'] = cook_tip
+
     data['raw_nutrition'] =_nutrition_data(item)
     return json.dumps([data], indent=4)
 

@@ -1,3 +1,4 @@
 https://data.world/adamhelsinger/food-nutrition-information#
 https://catalog.data.gov/dataset/fsis-foodkeeper-data
 https://science.sciencemag.org/content/360/6392/987
+https://github.com/yufree/expodb/blob/master/foodb/foods.csv
