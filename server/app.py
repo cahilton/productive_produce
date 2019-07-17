@@ -281,7 +281,7 @@ def get_basic_info(item: str):
                 min_v = data['foodkeeper']['DOP_{}_Min'.format(t)]
                 max_v = data['foodkeeper']['DOP_{}_Max'.format(t)]
                 metric_v = data['foodkeeper']['DOP_{}_Metric'.format(t)]
-                tips_v = data['foodkeeper']['DOP_{}_Tips'.format(t)]
+                tips_v = data['foodkeeper']['DOP_{}_tips'.format(t)]
 
                 if len(min_v) > 0 or len(tips_v) > 0:
                     v_str = ''
