@@ -276,7 +276,32 @@ def get_basic_info(item: str):
                     cook_tip += timing
             data['custom']['Tips'] = cook_tip
 
-    data['raw_nutrition'] =_nutrition_data(item)
+            types = ['Refrigerate', 'Freeze', 'Pantry']
+            for t in types:
+                min_v = data['foodkeeper']['DOP_{}_Min'.format(t)]
+                max_v = data['foodkeeper']['DOP_{}_Max'.format(t)]
+                metric_v = data['foodkeeper']['DOP_{}_Metric'.format(t)]
+                tips_v = data['foodkeeper']['DOP_{}_Tips'.format(t)]
+
+                if len(min_v) > 0 or len(tips_v) > 0:
+                    v_str = ''
+                    if len(min_v) > 0:
+                        v_str = '{} to {} {}'.format(min_v, max_v, metric_v)
+                    if len(tips_v) > 0:
+                        if len(v_str) > 0:
+                            v_str += '; '
+                            v_str += tips_v
+
+                    if t == 'Refrigerate':
+                        data['custom']['Refrigerator'] = v_str
+                    elif t == 'Freeze':
+                        data['custom']['Frozen'] = v_str
+                    elif t == 'Pantry':
+                        data['custom']['Pantry'] = v_str
+
+
+
+    data['raw_nutrition'] = _nutrition_data(item)
     return json.dumps([data], indent=4)
 
 
