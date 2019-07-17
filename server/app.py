@@ -28,10 +28,11 @@ nutrition = dict()
 food_db = dict()
 
 modifiers = ['red', 'yellow', 'green', 'orange', 'blue', 'purple', 'white', 'black', 'cooked', 'raw', 'stuffed',
-             'baked', 'blanched', 'hard boiled', 'boiled', 'boneless', 'bone in', 'bone-in',
-             'whole', 'small', 'large', 'medium', 'baby', 'fresh', 'ground', 'sliced', 'chopped', 'cut']
+             'baked', 'blanched', 'hard boiled', 'boiled', 'boneless', 'bone in', 'bone-in', 'bagged', 'canned', 'frozen',
+             'whole', 'small', 'large', 'medium', 'baby', 'fresh', 'ground', 'sliced', 'chopped', 'cut', 'packaged', 'deli']
 replacer_words = ['cooked', 'raw', 'stuffed', 'baked', 'blanched', 'hard boiled', 'boiled', 'boneless', 'bone in', 'bone-in',
-                  'whole', 'small', 'large', 'medium', 'baby', 'fresh', 'ground', 'sliced', 'chopped', 'cut']
+                  'whole', 'small', 'large', 'medium', 'baby', 'fresh', 'ground', 'sliced', 'chopped', 'cut', 'bagged', 'canned', 'frozen',
+                   'packaged', 'deli']
 
 
 def load_csvs():
@@ -86,13 +87,11 @@ def load_csvs():
             else:
                 plural_name = n + 's'
                 freshness_data[plural_name] = data
+
             for w in replacer_words:
                 replaced = n.replace(w, '').strip().replace('  ', ' ')
                 if replaced not in freshness_data:
                     freshness_data[replaced] = data
-
-
-
 
     global custom_data
     rows = csv.DictReader(open("./data/custom_info.csv"))
@@ -100,7 +99,6 @@ def load_csvs():
         name = r['Name'].lower()
         if len(name) == 0:
             continue
-        custom_data[name] = r
         if name == 'baby carrots':
             custom_data['carrots'] = r
             custom_data['carrot'] = r
@@ -115,12 +113,20 @@ def load_csvs():
             custom_data['blueberry'] = r
         if name == 'tomatoes':
             custom_data['tomato'] = r
-        if name[-1] == 's':
-            sing_name = name[0:-1]
-            custom_data[sing_name] = custom_data[name]
-        else:
-            plural_name = name + 's'
-            custom_data[plural_name] = custom_data[name]
+
+        names = [name]
+        for n in names:
+            custom_data[n] = r
+            if n[-1] == 's':
+                sing_name = n[0:-1]
+                custom_data[sing_name] = r
+            else:
+                plural_name = n + 's'
+                custom_data[plural_name] = r
+            for w in replacer_words:
+                replaced = n.replace(w, '').strip().replace('  ', ' ')
+                if replaced not in custom_data:
+                    custom_data[replaced] = r
 
     global nutrition
     rows = csv.DictReader(open("./data/NutritionalFacts.csv"))
@@ -128,13 +134,19 @@ def load_csvs():
         name = r['Food and Serving'].lower().split(',')[0]
         if len(name) == 0:
             continue
-        nutrition[name] = r
-        if name[-1] == 's':
-            sing_name = name[0:-1]
-            nutrition[sing_name] = nutrition[name]
-        else:
-            plural_name = name + 's'
-            nutrition[plural_name] = nutrition[name]
+        names = [name]
+        for n in names:
+            nutrition[n] = r
+            if n[-1] == 's':
+                sing_name = n[0:-1]
+                nutrition[sing_name] = r
+            else:
+                plural_name = n + 's'
+                nutrition[plural_name] = r
+            for w in replacer_words:
+                replaced = n.replace(w, '').strip().replace('  ', ' ')
+                if replaced not in nutrition:
+                    nutrition[replaced] = r
 
     global food_db
     rows = csv.DictReader(open("./data/food_db.csv"))
@@ -142,13 +154,20 @@ def load_csvs():
         name = r['name'].lower().split(',')[0]
         if len(name) == 0:
             continue
-        food_db[name] = r
-        if name[-1] == 's':
-            sing_name = name[0:-1]
-            food_db[sing_name] = food_db[name]
-        else:
-            plural_name = name + 's'
-            food_db[plural_name] = food_db[name]
+
+        names = [name]
+        for n in names:
+            food_db[n] = r
+            if n[-1] == 's':
+                sing_name = n[0:-1]
+                food_db[sing_name] = r
+            else:
+                plural_name = n + 's'
+                food_db[plural_name] = r
+            for w in replacer_words:
+                replaced = n.replace(w, '').strip().replace('  ', ' ')
+                if replaced not in food_db:
+                    food_db[replaced] = r
 
 
 def _lookup(item: str, _dict):
