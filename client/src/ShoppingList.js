@@ -289,7 +289,7 @@ export default class ShoppingList extends React.Component {
                                 <div className="tile is-parent">
                                     <article className="tile is-child notification is-light">
                                         <div className="content">
-                                            <p className="subtitle">Cooking Tips</p>
+                                            <p className="subtitle">Cooking/Eating Tips</p>
                                             <div className="content">
                                                 {info_data.cooking}
                                             </div>

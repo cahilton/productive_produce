@@ -251,6 +251,9 @@ def get_basic_info(item: str):
     if len(data['custom'].keys()) == 0:
         data['custom']['Purchasing'] = ''
         data['custom']['Tips'] = ''
+        data['custom']['Pantry'] = ''
+        data['custom']['Refrigerator'] = ''
+        data['custom']['Frozen'] = ''
         if len(data['wiki'].keys()) > 0:
             desc = data['wiki']['description']
             data['custom']['Purchasing'] = desc
