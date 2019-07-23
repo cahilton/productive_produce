@@ -21,7 +21,8 @@ spoonacular_headers = {
 }
 
 cache = TTLCache(maxsize=1000, ttl=3600)
-recipe_cache  = TTLCache(maxsize=1000, ttl=3600)
+recipe_cache = TTLCache(maxsize=1000, ttl=3600)
+summary_cache = TTLCache(maxsize=1000, ttl=36000)
 freshness_data = dict()
 custom_data = dict()
 nutrition = dict()
@@ -272,7 +273,10 @@ def get_basic_info(item: str):
                     cook_tip += '\n\n'
                 cook_tip += '{}'.format(cook_data['Cooking_Method'])
                 if len(cook_data['Timing_from']) > 0:
-                    timing = ' for {} to {} {}'.format(cook_data['Timing_from'], cook_data['Timing_to'], cook_data['Timing_metric'])
+                    if cook_data['Timing_from'] == cook_data['Timing_to']:
+                        timing = ' for {} {}'.format(cook_data['Timing_from'], cook_data['Timing_to'])
+                    else:
+                        timing = ' for {} to {} {}'.format(cook_data['Timing_from'], cook_data['Timing_to'], cook_data['Timing_metric'])
                     cook_tip += timing
             data['custom']['Tips'] = cook_tip
 
@@ -293,7 +297,10 @@ def get_basic_info(item: str):
                 if len(min_v) > 0 or len(tips_v) > 0:
                     v_str = ''
                     if len(min_v) > 0:
-                        v_str = '{} to {} {}'.format(min_v, max_v, metric_v)
+                        if min_v == max_v:
+                            v_str = '{} {}'.format(min_v, metric_v)
+                        else:
+                            v_str = '{} to {} {}'.format(min_v, max_v, metric_v)
                     if len(tips_v) > 0:
                         if len(v_str) > 0:
                             v_str += '; '
@@ -306,11 +313,15 @@ def get_basic_info(item: str):
                     elif t == 'Pantry':
                         data['custom']['Pantry'] = v_str
 
-
-
     data['raw_nutrition'] = _nutrition_data(item)
     return json.dumps([data], indent=4)
 
+
+@app.route("/summary/<string:items>", methods=['GET'])
+@cached(summary_cache)
+def get_summary(items: str):
+    data = dict()
+    return json.dumps(data, indent=4)
 
 @app.route("/recipe/<string:items>", methods=['GET'])
 @cached(recipe_cache)
