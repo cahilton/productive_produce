@@ -283,12 +283,24 @@ def get_basic_info(item: str):
                 min_v = data['foodkeeper']['DOP_{}_Min'.format(t)]
                 max_v = data['foodkeeper']['DOP_{}_Max'.format(t)]
                 metric_v = data['foodkeeper']['DOP_{}_Metric'.format(t)]
+                if min_v == '':
+                    min_v = data['foodkeeper']['{}_Min'.format(t)]
+                if max_v == '':
+                    max_v = data['foodkeeper']['{}_Max'.format(t)]
+                if metric_v == '':
+                    metric_v = data['foodkeeper']['{}_Metric'.format(t)]
                 if t == 'Refrigerate':
                     tips_v = data['foodkeeper']['DOP_Refrigerate_tips']
+                    if tips_v == '':
+                        tips_v = data['foodkeeper']['Refrigerate_tips']
                 elif t == 'Freeze':
                     tips_v = data['foodkeeper']['DOP_Freeze_Tips']
+                    if tips_v == '':
+                        tips_v = data['foodkeeper']['Freeze_Tips']
                 elif t == 'Pantry':
                     tips_v = data['foodkeeper']['DOP_Pantry_tips']
+                    if tips_v == '':
+                        tips_v = data['foodkeeper']['Pantry_tips']
                 else:
                     tips_v = ''
 
