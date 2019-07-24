@@ -328,6 +328,8 @@ def get_basic_info(item: str):
         data['custom']['Purchasing'] += '\n'
         data['custom']['Purchasing'] += desc
 
+    if data['aisle'] == 'Produce' and data['custom']['Composting'] == '':
+        data['custom']['Composting'] = "It's safe to compost most fruits and vegetables."
     data['raw_nutrition'] = _nutrition_data(item)
     return json.dumps([data], indent=4)
 
@@ -337,6 +339,7 @@ def get_basic_info(item: str):
 def get_summary(items: str):
     data = dict()
     return json.dumps(data, indent=4)
+
 
 @app.route("/recipe/<string:items>", methods=['GET'])
 @cached(recipe_cache)
