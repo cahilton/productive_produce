@@ -257,6 +257,7 @@ def get_basic_info(item: str):
         data['custom']['Refrigerator'] = ''
         data['custom']['Frozen'] = ''
         data['custom']['Composting'] = ''
+        data['custom']['Composting Website'] = 'https://www.compostthis.co.uk/'
 
         if len(data['foodkeeper'].keys()) > 0:
             cook_data = data['foodkeeper']['cooking_methods']
@@ -332,6 +333,7 @@ def get_basic_info(item: str):
 
     if data['aisle'] == 'Produce' and data['custom']['Composting'] == '':
         data['custom']['Composting'] = "It's safe to compost most fruits and vegetables."
+        data['custom']['Composting Website'] = "https://www.compostthis.co.uk/"
     data['raw_nutrition'] = _nutrition_data(item)
     return json.dumps([data], indent=4)
 
