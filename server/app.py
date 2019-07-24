@@ -247,6 +247,7 @@ def get_basic_info(item: str):
         data = dict()
         data['name'] = item
     data['foodkeeper'] = _foodkeeper_data(item)
+
     data['custom'] = _custom_data(item)
     data['wiki'] = _fooddb_data(item)
     if len(data['custom'].keys()) == 0:
@@ -255,6 +256,7 @@ def get_basic_info(item: str):
         data['custom']['Pantry'] = ''
         data['custom']['Refrigerator'] = ''
         data['custom']['Frozen'] = ''
+        data['custom']['Composting'] = ''
 
         if len(data['foodkeeper'].keys()) > 0:
             cook_data = data['foodkeeper']['cooking_methods']
