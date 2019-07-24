@@ -325,8 +325,8 @@ def get_basic_info(item: str):
 
     if len(data['wiki'].keys()) > 0:
         desc = data['wiki']['description']
-        data['custom']['Tips'] += '\n'
-        data['custom']['Tips'] += desc
+        data['custom']['Purchasing'] += '\n'
+        data['custom']['Refrigerate_tips'] += desc
 
     data['raw_nutrition'] = _nutrition_data(item)
     return json.dumps([data], indent=4)
