@@ -255,9 +255,7 @@ def get_basic_info(item: str):
         data['custom']['Pantry'] = ''
         data['custom']['Refrigerator'] = ''
         data['custom']['Frozen'] = ''
-        if len(data['wiki'].keys()) > 0:
-            desc = data['wiki']['description']
-            data['custom']['Purchasing'] = desc
+
         if len(data['foodkeeper'].keys()) > 0:
             cook_data = data['foodkeeper']['cooking_methods']
             tip_data = data['foodkeeper']['cooking_tips']
@@ -312,6 +310,11 @@ def get_basic_info(item: str):
                         data['custom']['Frozen'] = v_str
                     elif t == 'Pantry':
                         data['custom']['Pantry'] = v_str
+
+    if len(data['wiki'].keys()) > 0:
+        desc = data['wiki']['description']
+        data['custom']['Tips'] += '\n'
+        data['custom']['Tips'] += desc
 
     data['raw_nutrition'] = _nutrition_data(item)
     return json.dumps([data], indent=4)
